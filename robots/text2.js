@@ -3,19 +3,20 @@ const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
 
 const watsonApiKey = require('../credentials/watson-nlu.json').apikey
-const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
 
-const nlu = new NaturalLanguageUnderstandingV1({
-    iam_apikey: watsonApiKey,
+//const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
+var nlu = new NaturalLanguageUnderstandingV1({
+    authenticator: new IamAuthenticator({ apikey: watsonApiKey }),
     version: '2018-04-05',
     url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
-})
+});
 
-const state = require('./state.js')
-
-async function robot() {
+async function robot(content) {
     console.log('> [text-robot] Starting...')
-    const content = state.load()
 
     await fetchContentFromWikipedia(content)
     sanitizeContent(content)
@@ -23,16 +24,15 @@ async function robot() {
     limitMaximumSentences(content)
     await fetchKeywordsOfAllSentences(content)
 
-    state.save(content)
-
     async function fetchContentFromWikipedia(content) {
         console.log('> [text-robot] Fetching content from Wikipedia')
+
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
         const wikipediaAlgorithm = algorithmiaAuthenticated.algo('web/WikipediaParser/0.1.2')
-        const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm)
-        const wikipediaContent = wikipediaResponse.get()
+        const wikipediaResponde = await wikipediaAlgorithm.pipe(content.searchTerm)
+        const wikipediContent = wikipediaResponde.get()
 
-        content.sourceContentOriginal = wikipediaContent.content
+        content.sourceContentOriginal = wikipediContent.content
         console.log('> [text-robot] Fetching done!')
     }
 
@@ -65,6 +65,7 @@ async function robot() {
         content.sentences = []
 
         const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
+        
         sentences.forEach((sentence) => {
             content.sentences.push({
                 text: sentence,
@@ -92,6 +93,25 @@ async function robot() {
 
     async function fetchWatsonAndReturnKeywords(sentence) {
         return new Promise((resolve, reject) => {
+            /*
+            nlu.analyze(
+                {
+                    text: sentence, // Buffer or String
+                    features: {
+                        keywords: {}
+                    }
+                })
+                .then(response => {
+                    console.log(JSON.stringify(response.result, null, 2))
+                    const keywords = response.result.keywords.map((keyword) => {
+                        return keyword.text
+                    })
+                })
+                .catch(err => {
+                    console.log('error: ', err)
+                    throw err
+                })
+                */
             nlu.analyze({
                 text: sentence,
                 features: {
@@ -109,9 +129,9 @@ async function robot() {
 
                 resolve(keywords)
             })
+            /**/
         })
     }
-
 }
 
 module.exports = robot

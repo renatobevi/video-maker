@@ -18,7 +18,13 @@
   "homepage": "https://github.com/renatobevi/video-maker#readme",
   "dependencies": {
     "algorithmia": "^0.3.10",
+    "express": "^4.17.1",
+    "googleapis": "^50.0.0",
+    "ibm-watson": "^5.5.0",
+    "image-downloader": "^4.0.1",
+    "npm": "^6.14.5",
     "readline-sync": "^1.4.10",
-    "sbd": "^1.0.18"
+    "sbd": "^1.0.18",
+    "watson-developer-cloud": "^4.0.1"
   }
 }
