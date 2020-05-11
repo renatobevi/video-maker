@@ -3,14 +3,23 @@ const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
 
 const watsonApiKey = require('../credentials/watson-nlu.json').apikey
-const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
+//const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
 
+/*
 const nlu = new NaturalLanguageUnderstandingV1({
     iam_apikey: watsonApiKey,
     version: '2018-04-05',
     url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
 })
+*/
 
+const nlu = new NaturalLanguageUnderstandingV1({
+    authenticator: new IamAuthenticator({ apikey: watsonApiKey }),
+    version: '2018-04-05',
+    url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
+});
 const state = require('./state.js')
 
 async function robot() {
@@ -90,6 +99,7 @@ async function robot() {
         }
     }
 
+
     async function fetchWatsonAndReturnKeywords(sentence) {
         return new Promise((resolve, reject) => {
             nlu.analyze({
@@ -113,5 +123,6 @@ async function robot() {
     }
 
 }
+
 
 module.exports = robot
