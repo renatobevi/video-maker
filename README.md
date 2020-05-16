@@ -1,4 +1,4 @@
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/filipedeschamps/video-maker) 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/renatobevi/video-maker) 
 
 # video-maker
 Projeto open source para fazer vídeos automatizados
@@ -22,7 +22,7 @@ Vou partir do princípio que você caiu na playlist e é aspirantes a programaç
 ## Clonando o Repositório ##
 Com o Git e o Node.js instalado na sua maquina e a **URL** do projeto em mãos, cria em algum lugar do seu pc uma pasta para criarmos uma copia do repositório, dentro dela abra o **cmd** ou **powershell** e digite os comandos abaixo:
 ```
-git clone https://github.com/filipedeschamps/video-maker.git
+git clone https://github.com/renatobevi/video-maker.git
 cd video-maker
 npm install
 ```
